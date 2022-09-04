@@ -36,6 +36,14 @@ on:
         description: 'Production environment url.'
         type: string
         required: true
+      USERNAMEDESTINO:
+        description: 'Usuario do ambiente de destino'
+        type: string
+        required: true      
+      USERNAMEORIGEM:
+        description: 'Usuario do ambiente de origem'
+        type: string
+        required: true
       TENANT_ID: 
         description: 'The tenant id'
         type: string
@@ -68,8 +76,8 @@ jobs:
       uses: microsoft/powerplatform-actions/import-solution@v0
       with:
         environment-url: ${{inputs.BUILD_ENVIRONMENT_URL}}
-        user-name: ${{secrets.USERNAME}}
-        password-secret: ${{ secrets.password }}
+        user-name: ${{inputs.USERNAMEORIGEM}}
+        password-secret: ${{ secrets.envSecret }}
         tenant-id: ${{inputs.TENANT_ID}}
         solution-file: ${{ inputs.solution_outbound_folder}}/${{ inputs.solution_name }}.zip
         force-overwrite: true
@@ -79,8 +87,8 @@ jobs:
       uses: microsoft/powerplatform-actions/export-solution@v0
       with:
         environment-url: ${{inputs.BUILD_ENVIRONMENT_URL}}
-        user-name: ${{secrets.USERNAME}}
-        password-secret: ${{ secrets.password }}
+        user-name: ${{inputs.USERNAMEORIGEM}}
+        password-secret: ${{ secrets.envSecret }}
         tenant-id: ${{inputs.TENANT_ID}}
         solution-name: ${{ inputs.solution_name }}
         managed: true
@@ -113,7 +121,7 @@ jobs:
       with:
         environment-url: ${{inputs.PRODUCTION_ENVIRONMENT_URL}}
         user-name: ${{inputs.USERNAMEDESTINO}}
-        password-secret: ${{ secrets.password }}
+        password-secret: ${{ secrets.envSecret }}
         tenant-id: ${{inputs.TENANT_ID}}
         solution-file: ${{ inputs.solution_release_folder}}/${{ inputs.solution_name }}.zip
         force-overwrite: true
