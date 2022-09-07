@@ -42,6 +42,13 @@ jobs:
     runs-on: windows-latest   # alternate runner OS is: ubuntu-latest
 
     steps:
+    - name: who-am-i action
+      uses: microsoft/powerplatform-actions/who-am-i@v0
+      with:
+        environment-url: ${{env.ORIGEM_ENVIRONMENT_URL}}
+        user-name: ${{ env.ORIGEM_USERNAME }}
+        password-secret: ${{ env.PASSWORD }}
+    
     - name: Export Solution
       uses: microsoft/powerplatform-actions/export-solution@v0
       with:
@@ -50,7 +57,6 @@ jobs:
         password-secret: ${{ env.PASSWORD }}
         solution-name: ${{ github.event.inputs.solution_name }}
         solution-output-file: ${{ github.event.inputs.solution_exported_folder}}/${{ github.event.inputs.solution_name }}.zip
-        working-directory: 'out'
         managed: true
 
     - name: Upload the ready to ship solution to GH artifact store
