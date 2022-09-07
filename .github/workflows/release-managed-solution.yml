@@ -33,7 +33,6 @@ env:
   DESTINO_ENVIRONMENT_URL: 'https://org86768755.crm2.dynamics.com/'
   ORIGEM_USERNAME: 'admin@almdestino.onmicrosoft.com'
   DESTINO_USERNAME: 'admin@almorigem.onmicrosoft.com'
-  PASSWORD: ${{secrets.PASSWORD}}
 
 jobs:
   #Nome do Job, pode ter mais de um
@@ -47,14 +46,14 @@ jobs:
       with:
         environment-url: ${{env.ORIGEM_ENVIRONMENT_URL}}
         user-name: ${{ env.ORIGEM_USERNAME }}
-        password-secret: ${{ env.PASSWORD }}
+        password-secret: ${{ secrets.PASSWORD }}
     
     - name: Export Solution
       uses: microsoft/powerplatform-actions/export-solution@v0
       with:
         environment-url: ${{env.ORIGEM_ENVIRONMENT_URL}}
         user-name: ${{ env.ORIGEM_USERNAME }}
-        password-secret: ${{ env.PASSWORD }}
+        password-secret: ${{ secrets.PASSWORD }}
         solution-name: ${{ github.event.inputs.solution_name }}
         solution-output-file: ${{ github.event.inputs.solution_exported_folder}}/${{ github.event.inputs.solution_name }}.zip
         managed: true
@@ -88,7 +87,7 @@ jobs:
         with:
           environment-url: ${{env.DESTINO_ENVIRONMENT_URL}}
           user-name: ${{ env.DESTINO_USERNAME }}
-          password-secret: ${{ env.PASSWORD }}
+          password-secret: ${{ secrets.PASSWORD }}
           solution-file: ${{ github.event.inputs.solution_release_folder}}/${{ github.event.inputs.solution_name}}.zip
           force-overwrite: true
           publish-changes: true
