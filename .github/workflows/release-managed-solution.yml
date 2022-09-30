@@ -24,6 +24,26 @@ on:
        description: 'folder where the released binaries are going to be hosted *do not change*'
        required: true
        default: out/release
+  repository_dispatch:
+    inputs:
+      # Change this value
+      solution_name:
+        description: 'name of the solution to worked on from Power Platform'
+        required: true
+        default: SolucaoTeste
+       #Do Not change these values
+      solution_exported_folder:
+        description: 'folder name for staging the exported solution *do not change*'
+        required: true
+        default: out/export/
+      solution_source_folder:
+       description: 'folder name to be created and checked in *do not change*'
+       required: true
+       default: solutions/
+      solution_release_folder:
+       description: 'folder where the released binaries are going to be hosted *do not change*'
+       required: true
+       default: out/release
   release:
     types: [created]
     
