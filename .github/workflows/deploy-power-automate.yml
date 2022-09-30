@@ -1,0 +1,73 @@
+name: Deploy - Power Automate
+
+on:
+  repository_dispatch:
+    types: [start-example-workflow]
+
+env:
+#edit your values here
+  ORIGEM_ENVIRONMENT_URL: 'https://orga259a2b4.crm2.dynamics.com'
+  DESTINO_ENVIRONMENT_URL: 'https://org86768755.crm2.dynamics.com/'
+  ORIGEM_USERNAME: 'admin@almorigem.onmicrosoft.com'
+  DESTINO_USERNAME: 'admin@almdestino.onmicrosoft.com'
+  solution_release_folder: out/release
+  solution_source_folder: solutions/
+  solution_exported_folder: out/export/
+  
+jobs:
+  #Nome do Job, pode ter mais de um
+  export-solution-origem-env:
+
+    runs-on: windows-latest   # alternate runner OS is: ubuntu-latest
+
+    steps:
+    - name: who-am-i action
+      uses: microsoft/powerplatform-actions/who-am-i@v0
+      with:
+        environment-url: ${{env.ORIGEM_ENVIRONMENT_URL}}
+        user-name: ${{ env.ORIGEM_USERNAME }}
+        password-secret: ${{ secrets.PASSWORD }}
+    
+    - name: Export Solution
+      uses: microsoft/powerplatform-actions/export-solution@v0
+      with:
+        environment-url: ${{env.ORIGEM_ENVIRONMENT_URL}}
+        user-name: ${{ env.ORIGEM_USERNAME }}
+        password-secret: ${{ secrets.PASSWORD }}
+        solution-name: ${{ github.event.client_payload.solution_name }}
+        solution-output-file: ${{ env.solution_exported_folder}}/${{ github.event.client_payload.solution_name }}.zip
+        managed: true
+
+    - name: Upload the ready to ship solution to GH artifact store
+      uses: actions/upload-artifact@v2
+      with:
+        name: managedSolutions
+        path: ${{ env.solution_exported_folder}}/${{ github.event.client_payload.solution_name }}.zip
+
+
+  release-to-another-env:
+      needs: [ export-solution-origem-env ]
+      runs-on: windows-latest
+      env:
+        RUNNER_DEBUG: 1
+
+      steps:
+      - uses: actions/checkout@v2
+        with:
+          lfs: true
+
+      - name: Fetch the ready to ship solution from GH artifact store
+        uses: actions/download-artifact@v2
+        with:
+          name: managedSolutions
+          path: out/release/
+
+      - name: Import solution to destino env
+        uses: microsoft/powerplatform-actions/import-solution@v0
+        with:
+          environment-url: ${{env.DESTINO_ENVIRONMENT_URL}}
+          user-name: ${{ env.DESTINO_USERNAME }}
+          password-secret: ${{ secrets.PASSWORD }}
+          solution-file: ${{ env.solution_release_folder}}/${{ github.event.client_payload.solution_name}}.zip
+          force-overwrite: true
+          publish-changes: true
