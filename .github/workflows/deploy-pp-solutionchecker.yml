@@ -6,10 +6,10 @@ on:
 
 env:
 #edit your values here
-  ORIGEM_ENVIRONMENT_URL: 'https://orga259a2b4.crm2.dynamics.com'
-  DESTINO_ENVIRONMENT_URL: 'https://org86768755.crm2.dynamics.com/'
-  ORIGEM_USERNAME: 'admin@almorigem.onmicrosoft.com'
-  DESTINO_USERNAME: 'admin@almdestino.onmicrosoft.com'
+  ORIGEM_ENVIRONMENT_URL: 'https://org80c59a04.crm2.dynamics.com'
+  DESTINO_ENVIRONMENT_URL: 'https://orgc5ce016e.crm2.dynamics.com'
+  ORIGEM_USERNAME: 'BiancaOrigem@Almorigem2.onmicrosoft.com'
+  DESTINO_USERNAME: 'BiancaDestino@BiancaDestino2.onmicrosoft.com'
   solution_release_folder: out/release
   solution_source_folder: solutions/
   solution_exported_folder: out/export/
